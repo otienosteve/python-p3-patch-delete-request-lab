@@ -28,3 +28,9 @@ def partial_update(student_id: int, payload: EmployeeSchema ):
     for key, value in payload.dict(exclude_unset=True).items():
         setattr(emp, key,value)
     session.commit()
+
+@app.delete('/employees/delete/{student_id}')
+def delete(student_id: int) -> None:
+    emp = session.query(Employee).filter_by(id = student_id).first()
+    session.delete(emp)
+    session.commit()
