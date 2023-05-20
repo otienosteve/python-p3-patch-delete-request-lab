@@ -1,11 +1,11 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
-from models import session, Employee
+from models.employee import session, Employee
 
 # Client instance
 @pytest.fixture(scope='session')
-def Cleint():
+def Client():
     return TestClient(app)
 
 #  patch data
@@ -20,9 +20,10 @@ update_data={
 "salary": 521391236,
 "designation": "Waiter"
 }
-@pytest.fixture
+# path setup teardown 
+@pytest.fixture()
 def patch_data():
-    emp = Employee(**update_data)
+    emp = Employee(**dict(update_data))
     session.add(emp)
     session.commit()
     yield {"email": "dlet@jigsy.com",
@@ -30,13 +31,23 @@ def patch_data():
 "gender": "Male",
 "phone_number": 123456789,
 "salary": 5678982,
-"designation": "Waiter"}
+"designation": "Janitor"}
+    emp = session.query(Employee).filter_by(id=117).first()
+    session.delete(emp)
+    session.commit()
     
 
 
 #   Test Patch
-def test_patch(Client):
-    res = Client.patch('/partial_update', headers={"content-type":"application/json", "accept" : "application/json" } )
+def test_patch(Client, patch_data):
+    res = Client.patch('/employees/partial_update/{117}', headers={"content-type":"application/json", "accept" : "application/json"}, json=patch_data )
+    emp = session.query(Employee).filter_by(id=117).first()
+    assert emp.email == 'dlet@jigsy.com', 'Unexpected Email'
+    assert emp.age == 'age', 'Unexpected age '
+    assert emp.gender == 'Male', 'Unexpected Gender'
+    assert emp.phone_number ==  123456789, 'Unexpected Phone Number'
+    assert emp.designation == 'Janitor', 'Unexpected Designation'
+
 
 
 
