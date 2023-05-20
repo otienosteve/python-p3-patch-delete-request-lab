@@ -40,10 +40,10 @@ def patch_data():
 
 #   Test Patch
 def test_patch(Client, patch_data):
-    res = Client.patch('/employees/partial_update/{117}', headers={"content-type":"application/json", "accept" : "application/json"}, json=patch_data )
+    res = Client.patch('/employees/partial_update/117', headers={"content-type":"application/json", "accept" : "application/json"}, json=patch_data )
     emp = session.query(Employee).filter_by(id=117).first()
     assert emp.email == 'dlet@jigsy.com', 'Unexpected Email'
-    assert emp.age == 'age', 'Unexpected age '
+    assert emp.age == 40, 'Unexpected age '
     assert emp.gender == 'Male', 'Unexpected Gender'
     assert emp.phone_number ==  123456789, 'Unexpected Phone Number'
     assert emp.designation == 'Janitor', 'Unexpected Designation'
