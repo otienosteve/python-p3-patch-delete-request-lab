@@ -1,11 +1,9 @@
 from fastapi import FastAPI
 from typing import Optional
 from pydantic import BaseModel
-from models.employee import session, Employee
-
+from employee import session, Employee
 
 app = FastAPI()
-
 
 class EmployeeSchema(BaseModel):
     id : Optional[int]
@@ -21,7 +19,7 @@ class EmployeeSchema(BaseModel):
         orm_mode = True
 
 
-@app.patch('/employees/partial_update/{student_id}')
+@app.patch('/employees/partial_update/{student_id}', status_code=200)
 def partial_update(student_id: int, payload: EmployeeSchema ):
     emp = session.query(Employee).filter_by(id = student_id).first()
 
@@ -29,7 +27,7 @@ def partial_update(student_id: int, payload: EmployeeSchema ):
         setattr(emp, key,value)
     session.commit()
 
-@app.delete('/employees/delete/{student_id}')
+@app.delete('/employees/delete/{student_id}',status_code=200)
 def delete(student_id: int) -> None:
     emp = session.query(Employee).filter_by(id = student_id).first()
     session.delete(emp)

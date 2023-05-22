@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
-from models.employee import session, Employee
+from employee import session, Employee
 
 # Client instance
 @pytest.fixture(scope='session')
@@ -35,17 +35,11 @@ def patch_data():
     emp = session.query(Employee).filter_by(id=117).first()
     session.delete(emp)
     session.commit()
-    
-# @pytest.fixture(scope='function')
-# def delete_data():
-#     yield update_data
-   
-
-
 
 #   Test Patch
 def test_patch(Client, patch_data):
     res = Client.patch('/employees/partial_update/117', headers={"content-type":"application/json", "accept" : "application/json"}, json=patch_data )
+    assert res.statuse_code == 200, 'Unsuccesful Update'
     emp = session.query(Employee).filter_by(id=117).first()
     assert emp.email == 'dlet@jigsy.com', 'Unexpected Email'
     assert emp.age == 40, 'Unexpected age '
@@ -59,9 +53,10 @@ def test_delete(Client) :
     emp = Employee(**dict(update_data))
     session.add(emp)
     session.commit()
-    befre = session.query(Employee).filter_by(id = 117).first()
-    assert befre.first_name == 'Damian', 'Such an employee doesn\'t exist'
+    before_add = session.query(Employee).filter_by(id = 117).first()
+    assert before_add.first_name == 'Damian', 'Such an employee doesn\'t exist'
     res = Client.delete('/employees/delete/117', headers={"content-type":"application/json", "accept" : "application/json"})
+    assert res.status_code == 200 , 'Unsuccessful Delete'
     after = session.query(Employee).filter_by(id = 117).first()
     assert not after, 'Employee still present in db'
     
