@@ -1,4 +1,4 @@
-# PATCH DELETE REQUEAT LAB WITH FASTAPI
+# PATCH DELETE REQUEST LAB WITH FASTAPI
 
 setup
 Fork and clone this repo, then navigate into the cloned folder
@@ -40,6 +40,13 @@ salary -> Integer
 designation -> String
 ```
 Create a corresponding Pydantic class called EmployeeSchema for the model and use it to annotate your endpoints as per the required return type. 
+
+Add validation to your employee fields as follows.   
+`last_name and first_name should include at least 2 characters`   
+`email should be valid`  
+`Gender should be Male or Female`      
+`Age should be greater than 18`   
+`Salary should be between 30,000 - 200,000`  
 
 Implement the following endpoints and the required functionality.
 
