@@ -39,7 +39,7 @@ def patch_data():
 #   Test Patch
 def test_patch(Client, patch_data):
     res = Client.patch('/employees/partial_update/117', headers={"content-type":"application/json", "accept" : "application/json"}, json=patch_data )
-    assert res.statuse_code == 200, 'Unsuccesful Update'
+    assert res.status_code == 200, 'Unsuccesful Update'
     emp = session.query(Employee).filter_by(id=117).first()
     assert emp.email == 'dlet@jigsy.com', 'Unexpected Email'
     assert emp.age == 40, 'Unexpected age '
